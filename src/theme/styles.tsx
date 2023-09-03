@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     row_wrapper : {
-        flex: 1,
         flexDirection: 'row',
         width: '100%',
     },
@@ -46,17 +45,39 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
     },
-    xs_temp_max: {
+    divider: {
+        borderBottomColor: '#fff',
+        borderBottomWidth: 1,
+        marginTop: 15,
+        marginBottom: 25,
+    },
+    item_start: {
+        alignItems: 'center',
+        alignSelf: 'flex-start'
+    },
+    item_center: {
+        alignItems: 'center',
+        alignSelf: 'center'
+    },
+    item_end: {
         alignItems: 'center',
         alignSelf: 'flex-end',
     },
-    xs_temp_min: { 
-        alignItems: 'center',
-        alignSelf: 'flex-start' 
+    body1: {
+        fontSize: 18,
+        color: '#fff',
     },
-    xs_temp_current: {
+    body2: {
+        fontSize: 14,
+        color: '#fff',
+    },
+    icon_wrapper: {
+        justifyContent: 'center',
         alignItems: 'center',
-        alignSelf: 'center' 
+    },
+    icon: {
+        width: 30,
+        height: 30,
     },
 });
 

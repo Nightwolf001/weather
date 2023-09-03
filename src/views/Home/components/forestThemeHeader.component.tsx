@@ -24,9 +24,10 @@ const ForestThemeHeader = ({ location_details }: ThemeHeaderProps) => {
                 location_details.weather?.conditions === 'Rain' ? require(`../../../assets/images/forest/rain.png`) :
                 ''}
         >
-            <View style={styles.image_container}>
-                <Text style={styles.current_temp}>{location_details.weather?.temp_current.toFixed(0)}</Text>
-            </View>
+        <View style={styles.image_container}>
+            <Text style={styles.current_temp}>{location_details.weather?.temp_current.toFixed(0)}&#176;</Text>
+            <Text style={styles.current_temp_desc}>{location_details.weather?.description}</Text>
+        </View>
         </ImageBackground>
     );
 };

@@ -1,5 +1,7 @@
 import axios from 'axios';
-import { Coord, Location, Weather } from '../types';
+import moment from 'moment';
+
+import { Coord, ForecastList, ForecastItem, Location, Weather } from '../types';
 import { weather_api_base, weather_api_key, maps_api_base, maps_api_key } from '../../app.json';
 
 export const getWeatherDetails = async (coord: Coord, units : string ) => {
@@ -16,6 +18,40 @@ export const getWeatherDetails = async (coord: Coord, units : string ) => {
 
         return weather;
 
+    } catch (ex) {
+        console.error(ex)
+    }
+}
+
+export const getWeatherForecast = async (coord: Coord, units: string) => {
+    try {
+
+        const { data } = await axios.get(`${weather_api_base}/forecast?lat=${coord.lat}&lon=${coord.lng}&units=${units}&appid=${weather_api_key}`);
+        console.log('data', data);
+
+        let forecastList: ForecastList[] = [];
+
+        for (let i = 0; i < data.list.length; i++) {
+            const item = data.list[i];
+
+            if (item.dt_txt.includes('00:00:00')) {
+            
+                let forecastItem: ForecastItem = {
+                    date: moment(item.dt_txt).format('dddd'),
+                    temp: item.main.temp_min,
+                    conditions: item.weather[0].main
+                }
+
+                let forecastListObj: ForecastList = {
+                    forecast: forecastItem
+                }
+
+                forecastList.push(forecastListObj);
+            }
+        }
+    
+        return forecastList;
+        
     } catch (ex) {
         console.error(ex)
     }
