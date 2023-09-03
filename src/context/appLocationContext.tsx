@@ -1,32 +1,26 @@
 import React, { createContext, useState, useEffect } from 'react';
 import Geolocation from '@react-native-community/geolocation';
 
-interface Location {
-    lat: string;
-    lng: string;
-};
-
-interface AppLocationContextType {
-    location: Location;
-}
+import { Coord } from '../types';
 
 // Create the app state context
-const AppLocationContext = createContext<AppLocationContextType>({
-    location: { lat: '', lng: '' },
+const AppLocationContext = createContext<Coord>({
+    lat: '', 
+    lng: '' ,
 });
 
 // Create the app state provider component
 const AppLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [location, setLocation] = useState<Location>({ lat: '', lng: '' });
-    console.log('AppLocationProvider: ', location.lat, location.lng);
-    console.log('AppLocationProvider: ', children);
+    const [coord, setCoord] = useState<Coord>({ lat: '', lng: '' });
+    console.log('AppLocationProvider: ', coord.lat, coord.lng);
+ 
     useEffect(() => {
         
         (async () => {
             Geolocation.getCurrentPosition(
                 async (position) => {
                     let { latitude, longitude } = position.coords;
-                    setLocation({ lat: latitude.toString(), lng: longitude.toString() });
+                    setCoord({ lat: latitude.toString(), lng: longitude.toString() });
                 },
                 (error) => {
                     console.error(error.code, error.message);
@@ -37,7 +31,7 @@ const AppLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     return (
-        <AppLocationContext.Provider value={{ location }}>
+        <AppLocationContext.Provider value={coord}>
             {children}
         </AppLocationContext.Provider>
     );

@@ -1,7 +1,7 @@
 import React, { FC, useEffect } from "react";
 import { Text, View } from "react-native";
 
-const Map: FC<{}> = () => {
+const Map: FC = () => {
 
     useEffect(() => {
         console.log('Home: ');

@@ -1,0 +1,34 @@
+
+import React, { FC, useEffect } from "react";
+import { ImageBackground, View, Text } from "react-native";
+import { styles } from "../../../theme/styles";
+import { LocationDetials } from "../../../types";
+
+type ThemeHeaderProps = {
+    location_details: LocationDetials
+}
+
+const ForestThemeHeader = ({ location_details }: ThemeHeaderProps) => {
+
+    const { weather, location } = location_details;
+
+    useEffect(() => {
+        console.log('Home: ');
+    }, []);
+
+    return (
+        <ImageBackground style={styles.image}
+            source={
+                location_details.weather?.conditions === 'Sun' ? require(`../../../assets/images/forest/sun.png`) :
+                location_details.weather?.conditions === 'Clouds' ? require(`../../../assets/images/forest/cloud.png`) :
+                location_details.weather?.conditions === 'Rain' ? require(`../../../assets/images/forest/rain.png`) :
+                ''}
+        >
+            <View style={styles.image_container}>
+                <Text style={styles.current_temp}>{location_details.weather?.temp_current.toFixed(0)}</Text>
+            </View>
+        </ImageBackground>
+    );
+};
+
+export default ForestThemeHeader;

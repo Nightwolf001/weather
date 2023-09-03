@@ -4,21 +4,22 @@ import { persistReducer, persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import locationSlice from './reducers/locations.reducer'
-import themeSlice from './reducers/theme.reducer'
+import settingsSlice from './reducers/settings.reducer'
 
 const rootReducer = combineReducers({
     locationSlice,
-    themeSlice
+    settingsSlice
 })
 
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ["theme", "locations"],
+    whitelist: ["settings", "locations"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
+export type RootState = ReturnType<typeof persistedReducer>;
 export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
