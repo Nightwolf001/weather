@@ -24,6 +24,13 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
+    current_city: {
+        marginTop: 80,
+        textTransform: 'uppercase',
+        textAlign: 'center',
+        fontSize: 26,
+        color: '#fff',
+    },
     current_temp: {
         fontWeight: 'bold',
         textAlign: 'center',

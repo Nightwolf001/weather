@@ -7,7 +7,7 @@ import { Coord } from '../types';
 // Create the app state context
 const AppLocationContext = createContext<Coord>({
     lat: '', 
-    lng: '' ,
+    lng: '',
 });
 
 // Create the app state provider component
@@ -16,13 +16,17 @@ const AppLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [coord, setCoord] = useState<Coord>({ lat: '', lng: '' });
     const [previousAppState, setPreviousAppState] = useState<string>('');
     const [currentAppState, setCurrentAppState] = useState<string>(AppState.currentState);
+
+    useEffect(() => {
+        (async () => {
+            await getCoords();
+        })();
+    }, []);
     
     useEffect(() => {    
         (async () => {
             const handleAppStateChange = async (nextAppState: AppStateStatus) => {
-            if (currentAppState === null || currentAppState === 'unknown' && nextAppState === 'active') {
-                await getCoords();
-            } else if (currentAppState === 'background' && nextAppState === 'active') {
+            if (currentAppState === 'background' && nextAppState === 'active') {
                 await getCoords();
             }
                 setPreviousAppState(currentAppState);
@@ -47,6 +51,7 @@ const AppLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children
             async (position) => {
                 let { latitude, longitude } = position.coords;
                 setCoord({ lat: latitude.toString(), lng: longitude.toString() });
+                console.log('set Coords');
             },
             (error) => {
                 console.error(error.code, error.message);

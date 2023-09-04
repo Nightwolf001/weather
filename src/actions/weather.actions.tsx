@@ -5,6 +5,7 @@ import { Coord, ForecastList, ForecastItem, Location, Weather } from '../types';
 import { weather_api_base, weather_api_key, maps_api_base, maps_api_key } from '../../app.json';
 
 export const getWeatherDetails = async (coord: Coord, units : string ) => {
+    console.log('getWeatherDetails', coord, units);
     try {
         
         const { data } = await axios.get(`${weather_api_base}/weather?lat=${coord.lat}&lon=${coord.lng}&units=${units}&appid=${weather_api_key}`);
@@ -24,6 +25,7 @@ export const getWeatherDetails = async (coord: Coord, units : string ) => {
 }
 
 export const getWeatherForecast = async (coord: Coord, units: string) => {
+    console.log('getWeatherForecast', coord, units);
     try {
 
         const { data } = await axios.get(`${weather_api_base}/forecast?lat=${coord.lat}&lon=${coord.lng}&units=${units}&appid=${weather_api_key}`);
@@ -57,6 +59,7 @@ export const getWeatherForecast = async (coord: Coord, units: string) => {
 }
 
 export const getLocationDetails = async (coord: Coord) => {
+    console.log('getLocationDetails', coord);
     try {
 
         const { data } = await axios.get(`${maps_api_base}/geocode/json?latlng=${coord.lat},${coord.lng}&key=${maps_api_key}`);
