@@ -27,8 +27,7 @@ export const getWeatherForecast = async (coord: Coord, units: string) => {
     try {
 
         const { data } = await axios.get(`${weather_api_base}/forecast?lat=${coord.lat}&lon=${coord.lng}&units=${units}&appid=${weather_api_key}`);
-        console.log('data', data);
-
+        
         let forecastList: ForecastList[] = [];
 
         for (let i = 0; i < data.list.length; i++) {
