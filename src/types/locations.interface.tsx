@@ -3,11 +3,6 @@ export interface Coord {
     lng: string;
 };
 
-export interface SavedLocation {
-    name: string;
-    coord: Coord;
-}
-
 export interface ForecastItem {
     date: string;
     conditions: string;
@@ -37,4 +32,15 @@ export interface LocationDetials {
     weather?: Weather;
     coord?: Coord;
     forecast?: ForecastList[];
+}
+
+export interface SavedLocation {
+    name: string;
+    coord: Coord;
+    weather?: Weather;
+}
+
+export interface SavedLocationList {
+    name: string;
+    weather?: Weather;
 }

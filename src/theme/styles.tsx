@@ -133,6 +133,11 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16,
     },
+    modal_txt_alt: {
+        color: '#000',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
     modal_btn_right: {
         position: 'absolute',
         top: 20,
@@ -153,6 +158,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'flex-start',
     },
+    modal_heading_txt: {
+        color: '#000',
+        fontWeight: 'bold',
+        fontSize: 22,        
+    },
+    card:{
+        display: 'flex',
+        flexDirection: 'row',
+        borderRadius: 10,
+        marginBottom: 10,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+        alignItems: 'center',
+    }
 });
 
 export { styles }

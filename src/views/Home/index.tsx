@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState, useContext, useCallback } from "react";
-import { View, ActivityIndicator, RefreshControl, Image, ScrollView, TouchableOpacity, Modal } from "react-native";
+import { View, ActivityIndicator, RefreshControl, Image, ScrollView, TouchableOpacity, Modal, Text } from "react-native";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
@@ -7,7 +7,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { getWeatherDetails, getLocationDetails, getWeatherForecast } from '../../actions/weather.actions';
 import { AppLocationContext } from '../../context/appLocationContext';
-import { Coord, LocationDetials } from '../../types';
+import { SavedLocationList, LocationDetials, Weather } from '../../types';
 
 import { styles } from "../../theme/styles";
 import { SeaThemeHeader, ForestThemeHeader, TempBar, ForecastList } from "../../components";
@@ -26,7 +26,9 @@ const Home: FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [refreshing, setRefreshing] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [modalView, setModalView] = useState<string>('locations');
     const [location_details, setLocationDetails] = useState<LocationDetials>({});
+    const [saved_locations_list, setSavedLocationsList] = useState<[SavedLocationList]>();
     
     useEffect(() => {
         (async () => {
@@ -37,7 +39,32 @@ const Home: FC = () => {
         })()
     }, [coord]);
 
-    console.log('saved_locations: ', saved_locations);
+    const handleModal = async (view : string) => {
+        setModalView(view);
+        setModalVisible(true);
+
+        if (view === 'locations') {
+            let list: any = [];
+
+            for (let i = 0; i < saved_locations.length; i++) {
+                const location = saved_locations[i];
+                const data = await getWeatherDetails(location.coord, unit);
+
+                let item: any = {
+                    name: location.name,
+                    weather: {
+                        temp_current: data?.temp_current || 0, // provide default value
+                        temp_min: data?.temp_min || 0,
+                        temp_max: data?.temp_max || 0,
+                        conditions: data?.conditions || '',
+                        description: data?.description || '',
+                    }
+                };
+                list.push(item);
+            }
+            setSavedLocationsList(list);
+        }
+    }
 
     const fetchData = async () => {
         console.log('fetchData start');
@@ -85,14 +112,15 @@ const Home: FC = () => {
                     <ForecastList location_details={location_details} />
                 </View>
 
-                <TouchableOpacity style={styles.map_icon_wrapper} onPress={() => onRefresh()} >
+                <TouchableOpacity style={styles.map_icon_wrapper} onPress={() => handleModal('map')} >
                     <Image style={styles.icon} resizeMode='contain' source={require(`../../assets/icons/map.png`)} />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.list_icon_wrapper} onPress={() => navigation.navigate('AddLocation')} >
+                <TouchableOpacity style={styles.list_icon_wrapper} onPress={() => handleModal('locations')} >
                     <Image style={styles.icon} resizeMode='contain' source={require(`../../assets/icons/list.png`)} />
                 </TouchableOpacity>
             </>
             }
+
             <Modal
                 style={styles.wrapper}
                 animationType="slide"
@@ -103,6 +131,46 @@ const Home: FC = () => {
                 }}
                 presentationStyle={"pageSheet"}
             >
+                {modalView === 'locations' &&
+                    <>
+                        <TouchableOpacity style={styles.modal_btn_left} onPress={() => setModalVisible(false)} >
+                            <Text style={styles.modal_txt_alt}>Close</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.modal_btn_right} onPress={() => (setModalVisible(false), navigation.navigate('AddLocation'))} >
+                            <Text style={styles.modal_txt_alt}>Add</Text>
+                        </TouchableOpacity>
+
+                        <View style={[styles.container, { marginTop : 60 }]}>
+                        <Text style={[styles.modal_heading_txt, { marginBottom: 20 }]}>Your'e Locations</Text>
+                            {saved_locations_list?.map((location, i) => (
+                                <View style={[styles.card, {backgroundColor: cloudy}]}>
+                                    <View style={styles.row_wrapper}>
+                                        <View style={styles.grid}>
+                                            <Text style={[styles.modal_txt, { fontSize: 20, marginBottom: 5 }]}>{location.name}</Text>
+                                            <Text style={[styles.modal_txt]}>{location.weather?.description}</Text>
+                                        </View>
+                                        <View style={styles.grid}>
+                                            <Text style={[styles.modal_txt, { textAlign: 'right', fontSize: 20, marginBottom: 5 }]}>{location.weather?.temp_current.toFixed(0)}&#176;</Text>
+                                            <Text style={[styles.modal_txt, { textAlign: 'right' }]}>H:{location.weather?.temp_max.toFixed(0)}&#176; - L:{location.weather?.temp_min.toFixed(0)}&#176;</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            ))}
+                        </View>
+                    </>
+                    }
+                    
+                {modalView === 'map' && 
+                    <>
+                        <TouchableOpacity style={styles.modal_btn_left} onPress={() => setModalVisible(false)} >
+                            <Text style={styles.modal_txt_alt}>Close</Text>
+                        </TouchableOpacity>
+
+                        <View style={styles.container}>
+                            <Text>Maps</Text>
+                        </View>
+                    </>
+                }
             </Modal>
         </ScrollView>
     );

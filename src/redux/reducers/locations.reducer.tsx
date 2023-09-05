@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { SavedLocation } from '../../types';
 
 const initialState = {
     saved_locations: [
@@ -7,6 +8,13 @@ const initialState = {
             coord: {
                 lat: '',
                 lng: '',
+            },
+            weather: {
+                temp_current: 0,
+                temp_min: 0,
+                temp_max: 0,
+                conditions: '',
+                description: '' 
             },
         },
     ],

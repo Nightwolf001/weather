@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { getWeatherDetails, getWeatherForecast } from '../../actions/weather.actions';
 import { Coord, LocationDetials, Location, SavedLocation } from '../../types';
@@ -19,6 +21,7 @@ import { maps_api_key } from '../../../app.json';
 const AddLocation: FC<{}> = () => {
 
     const dispatch = useDispatch();
+    const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
     const theme = useSelector((state: RootState) => state.settingsSlice.theme);
     const unit = useSelector((state: RootState) => state.settingsSlice.units);
@@ -53,6 +56,7 @@ const AddLocation: FC<{}> = () => {
 
         dispatch(addSavedLocation(location));
         setModalVisible(false);
+        navigation.navigate('Home')
 
     };
 
