@@ -3,6 +3,11 @@ export interface Coord {
     lng: string;
 };
 
+export interface SavedLocation {
+    name: string;
+    coord: Coord;
+}
+
 export interface ForecastItem {
     date: string;
     conditions: string;

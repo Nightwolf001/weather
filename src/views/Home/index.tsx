@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState, useContext, useCallback } from "react";
-import { View, ActivityIndicator, RefreshControl, Image, ScrollView, TouchableOpacity } from "react-native";
+import { View, ActivityIndicator, RefreshControl, Image, ScrollView, TouchableOpacity, Modal } from "react-native";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
@@ -24,6 +24,7 @@ const Home: FC = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
     const [refreshing, setRefreshing] = useState<boolean>(false);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [location_details, setLocationDetails] = useState<LocationDetials>({});
     
     useEffect(() => {
@@ -89,6 +90,17 @@ const Home: FC = () => {
                 </TouchableOpacity>
             </>
             }
+            <Modal
+                style={styles.wrapper}
+                animationType="slide"
+                transparent={false}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(false);
+                }}
+                presentationStyle={"pageSheet"}
+            >
+            </Modal>
         </ScrollView>
     );
 };

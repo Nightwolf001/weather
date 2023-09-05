@@ -1,14 +1,15 @@
 import React, { FC, useEffect, useState } from "react";
 import { Text, View, ScrollView, Modal, TouchableOpacity } from "react-native";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 import { getWeatherDetails, getWeatherForecast } from '../../actions/weather.actions';
-import { Coord, LocationDetials, Location } from '../../types';
+import { Coord, LocationDetials, Location, SavedLocation } from '../../types';
 
 import { SeaThemeHeader, ForestThemeHeader, TempBar, ForecastList } from "../../components";
+import { addSavedLocation } from '../../redux/reducers/locations.reducer';
 
 import { styles } from "../../theme/styles";
 import { sunny, cloudy, rainy } from "../../theme/colors"
@@ -17,11 +18,13 @@ import { maps_api_key } from '../../../app.json';
 
 const AddLocation: FC<{}> = () => {
 
+    const dispatch = useDispatch();
+
     const theme = useSelector((state: RootState) => state.settingsSlice.theme);
     const unit = useSelector((state: RootState) => state.settingsSlice.units);
 
-    const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [coord, setCoord] = useState<Coord>({ lat: '', lng: '' });
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [location, setLocation] = useState<Location>({} as Location);
     const [location_details, setLocationDetails] = useState<LocationDetials>({});
 
@@ -39,6 +42,17 @@ const AddLocation: FC<{}> = () => {
         const forecast = await getWeatherForecast(coord, unit);
         setLocationDetails({ ...location_details, weather, forecast, location, coord });
         console.log('fetchData end');
+    };
+
+    const addLocation = async () => {
+
+        let location: SavedLocation = {
+            coord: coord,
+            name: location_details?.location?.city || '',
+        }
+
+        dispatch(addSavedLocation(location));
+
     };
 
     return (
@@ -86,7 +100,7 @@ const AddLocation: FC<{}> = () => {
                     <TouchableOpacity style={styles.modal_btn_left} onPress={() => setModalVisible(false)} >
                         <Text style={styles.modal_txt}>Cancel</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.modal_btn_right} onPress={() => null} >
+                    <TouchableOpacity style={styles.modal_btn_right} onPress={() => addLocation()} >
                         <Text style={styles.modal_txt}>Add</Text>
                     </TouchableOpacity>
                     

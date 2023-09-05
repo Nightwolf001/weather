@@ -17,11 +17,11 @@ const locationSlice = createSlice({
     initialState,
     reducers: {
         addSavedLocation: (state, action) => {
+            console.log('addSavedLocation', action.payload)
             state.saved_locations = [...state.saved_locations, action.payload];
         },
         updateSavedLocation: (state, action) => {
             const { name } = action.payload;
-            console.log(state.saved_locations.findIndex(location => location.name))
             const index = state.saved_locations.findIndex(location => location.name === name);
             if (index !== -1) {
                 state.saved_locations = [
@@ -30,7 +30,7 @@ const locationSlice = createSlice({
                     ...state.saved_locations.slice(index + 1),
                 ];
             } else {
-                state.saved_locations.push(action.payload);
+                state.saved_locations = [...state.saved_locations, action.payload];
             }
         },
         removeSavedLocation: (state, action) => {

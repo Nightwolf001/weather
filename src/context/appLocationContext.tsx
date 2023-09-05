@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { AppState, AppStateStatus } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
-import { updateSavedLocation, addSavedLocation } from '../redux/reducers/locations.reducer';
+import { updateSavedLocation } from '../redux/reducers/locations.reducer';
 import { Coord } from '../types';
 
 // Create the app state context
