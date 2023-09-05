@@ -22,7 +22,7 @@ export interface Weather {
 }
 
 export interface Location {
-    country: number;
+    country: string;
     city: string;
     place_id: string;
 }

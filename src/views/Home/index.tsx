@@ -1,17 +1,22 @@
 import React, { FC, useEffect, useState, useContext, useCallback } from "react";
-import { Text, View, ActivityIndicator, RefreshControl, Image, ScrollView } from "react-native";
+import { View, ActivityIndicator, RefreshControl, Image, ScrollView, TouchableOpacity } from "react-native";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { getWeatherDetails, getLocationDetails, getWeatherForecast } from '../../actions/weather.actions';
 import { AppLocationContext } from '../../context/appLocationContext';
-import { LocationDetials } from '../../types';
+import { Coord, LocationDetials } from '../../types';
+
 import { styles } from "../../theme/styles";
-import { SeaThemeHeader, ForestThemeHeader } from "./components";
+import { SeaThemeHeader, ForestThemeHeader, TempBar, ForecastList } from "../../components";
 import { sunny, cloudy, rainy } from "../../theme/colors"
 
 
 const Home: FC = () => {
+
+    const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
     const coord = useContext(AppLocationContext);
     const theme = useSelector((state: RootState) => state.settingsSlice.theme);
@@ -23,7 +28,7 @@ const Home: FC = () => {
     
     useEffect(() => {
         (async () => {
-            if (coord.lat !== '' && coord.lng !== ''){
+            if (coord.lat.length !== 0 && coord.lng.length !== 0){
                 await fetchData();
                 setLoading(false);
             }
@@ -52,8 +57,7 @@ const Home: FC = () => {
                 <RefreshControl
                     refreshing={refreshing}
                     onRefresh={onRefresh}
-                    tintColor={'#fff'}
-                    progressBackgroundColor={location_details.weather?.conditions === 'Sun' ? sunny : location_details.weather?.conditions === 'Clouds' ? cloudy : location_details.weather?.conditions === 'Rain' ? rainy : sunny}
+                    tintColor={'#000'}
                 />
             }
         >
@@ -61,63 +65,28 @@ const Home: FC = () => {
             <ActivityIndicator style={styles.loader} size="large" color={sunny} />
             : 
             <>
-            {theme && theme === 'sea' && <SeaThemeHeader location_details={location_details} />}
-            {theme && theme === 'forest' && <ForestThemeHeader location_details={location_details} />}
-            <View style={[styles.container, { backgroundColor: location_details.weather?.conditions === 'Sun' ? sunny : location_details.weather?.conditions === 'Clouds' ? cloudy : location_details.weather?.conditions === 'Rain' ? rainy : sunny}]}>
-                <View style={styles.row_wrapper}>
-                    <View style={styles.grid}>
-                        <View style={styles.item_start}>
-                            <Text style={styles.body1}>{location_details.weather?.temp_min.toFixed(0)}&#176;</Text>
-                            <Text style={styles.body2}>min</Text>
-                        </View>
-                    </View>
-                    <View style={styles.grid}>
-                        <View style={styles.item_center}>
-                            <Text style={styles.body1}>{location_details.weather?.temp_current.toFixed(0)}&#176;</Text>
-                            <Text style={styles.body2}>current</Text>
-                        </View>
-                    </View>
-                    <View style={styles.grid}>
-                        <View style={styles.item_end}>
-                            <Text style={styles.body1}>{location_details.weather?.temp_max.toFixed(0)}&#176;</Text>
-                            <Text style={styles.body2}>max</Text>
-                        </View>
-                    </View>
+                <TouchableOpacity style={styles.refresh_icon_wrapper} onPress={() => onRefresh()} >
+                    <Image style={styles.icon} resizeMode='contain' source={require(`../../assets/icons/refresh.png`)} />
+                </TouchableOpacity>
+                    <TouchableOpacity style={styles.add_icon_wrapper} onPress={() => navigation.navigate('AddLocation')} >
+                    <Image style={styles.icon} resizeMode='contain' source={require(`../../assets/icons/add.png`)}/>
+                </TouchableOpacity>
+
+                {theme && theme === 'sea' && <SeaThemeHeader location_details={location_details} />}
+                {theme && theme === 'forest' && <ForestThemeHeader location_details={location_details} />}
+
+                <View style={[styles.container, { backgroundColor: location_details.weather?.conditions === 'Sun' ? sunny : location_details.weather?.conditions === 'Clouds' ? cloudy : location_details.weather?.conditions === 'Rain' ? rainy : sunny}]}>
+                    <TempBar location_details={location_details} />
+                    <View style={styles.divider}></View>
+                    <ForecastList location_details={location_details} />
                 </View>
-                <View style={styles.divider}></View>
-                <View>
-                    {location_details.forecast && location_details.forecast?.map((item, i) => (
-                        <View key={i} style={[styles.row_wrapper, { marginBottom: 15 }]}>
-                            <View style={styles.grid}>
-                                <View style={styles.item_start}>
-                                    <Text style={styles.body1}>{item.forecast.date}</Text>
-                                </View>
-                            </View>
-                            <View style={styles.grid}>
-                                <View style={styles.item_center}>
-                                    <View style={styles.icon_wrapper}>
-                                        <Image
-                                            style={styles.icon}
-                                            resizeMode='contain'
-                                            source={
-                                                item.forecast?.conditions === 'Sun' ? require(`../../assets/icons/clear.png`) :
-                                                item.forecast?.conditions === 'Clouds' ? require(`../../assets/icons/partlysunny.png`) :
-                                                item.forecast?.conditions === 'Rain' ? require(`../../assets/icons/rain.png`) :
-                                                require(`../../assets/icons/rain.png`)
-                                            }
-                                        />
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.grid}>
-                                <View style={styles.item_end}>
-                                    <Text style={styles.body1}>{item.forecast.temp.toFixed(0)}&#176;</Text>
-                                </View>
-                            </View>
-                        </View>
-                    ))}
-                </View>
-            </View>
+
+                <TouchableOpacity style={styles.map_icon_wrapper} onPress={() => onRefresh()} >
+                    <Image style={styles.icon} resizeMode='contain' source={require(`../../assets/icons/map.png`)} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.list_icon_wrapper} onPress={() => navigation.navigate('AddLocation')} >
+                    <Image style={styles.icon} resizeMode='contain' source={require(`../../assets/icons/list.png`)} />
+                </TouchableOpacity>
             </>
             }
         </ScrollView>

@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
     wrapper: {
+        position: 'relative',
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
@@ -12,6 +13,46 @@ const styles = StyleSheet.create({
     },
     loader: {
         alignSelf: 'center',
+    },
+    add_icon_wrapper: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        width: 40,
+        height: 40,
+        zIndex: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    refresh_icon_wrapper: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        width: 40,
+        height: 40,
+        zIndex: 100,
+        justifyContent: 'center',
+        alignItems: 'center',  
+    },
+    list_icon_wrapper: {
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        width: 40,
+        height: 40,
+        zIndex: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    map_icon_wrapper: {
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        width: 40,
+        height: 40,
+        zIndex: 100,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     image: {
         flex: 1,
@@ -83,8 +124,34 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     icon: {
+        tintColor: '#fff',
         width: 30,
         height: 30,
+    },
+    modal_txt: {
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: 16,
+    },
+    modal_btn_right: {
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        width: 60,
+        height: 40,
+        zIndex: 100,
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+    },
+    modal_btn_left: {
+        position: 'absolute',
+        top: 20,
+        left: 20,
+        width: 60,
+        height: 40,
+        zIndex: 100,
+        justifyContent: 'center',
+        alignItems: 'flex-start',
     },
 });
 

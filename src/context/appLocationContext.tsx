@@ -1,7 +1,9 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { AppState, AppStateStatus } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
+import { updateSavedLocation, addSavedLocation } from '../redux/reducers/locations.reducer';
 import { Coord } from '../types';
 
 // Create the app state context
@@ -13,6 +15,7 @@ const AppLocationContext = createContext<Coord>({
 // Create the app state provider component
 const AppLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
+    const dispatch = useDispatch();
     const [coord, setCoord] = useState<Coord>({ lat: '', lng: '' });
     const [previousAppState, setPreviousAppState] = useState<string>('');
     const [currentAppState, setCurrentAppState] = useState<string>(AppState.currentState);
@@ -50,8 +53,11 @@ const AppLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children
         Geolocation.getCurrentPosition(
             async (position) => {
                 let { latitude, longitude } = position.coords;
-                setCoord({ lat: latitude.toString(), lng: longitude.toString() });
-                console.log('set Coords');
+                setCoord({ lat: latitude.toString(), lng: longitude.toString() });                
+                dispatch(updateSavedLocation({
+                    coord: { lat: latitude.toString(), lng: longitude.toString() },
+                    name: 'Current Location',
+                }));                
             },
             (error) => {
                 console.error(error.code, error.message);
