@@ -52,6 +52,7 @@ const AddLocation: FC<{}> = () => {
         }
 
         dispatch(addSavedLocation(location));
+        setModalVisible(false);
 
     };
 

@@ -21,6 +21,7 @@ const Home: FC = () => {
     const coord = useContext(AppLocationContext);
     const theme = useSelector((state: RootState) => state.settingsSlice.theme);
     const unit = useSelector((state: RootState) => state.settingsSlice.units);
+    const saved_locations = useSelector((state: RootState) => state.locationSlice.saved_locations);
 
     const [loading, setLoading] = useState<boolean>(true);
     const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -35,6 +36,8 @@ const Home: FC = () => {
             }
         })()
     }, [coord]);
+
+    console.log('saved_locations: ', saved_locations);
 
     const fetchData = async () => {
         console.log('fetchData start');

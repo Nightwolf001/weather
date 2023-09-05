@@ -17,7 +17,6 @@ const locationSlice = createSlice({
     initialState,
     reducers: {
         addSavedLocation: (state, action) => {
-            console.log('addSavedLocation', action.payload)
             state.saved_locations = [...state.saved_locations, action.payload];
         },
         updateSavedLocation: (state, action) => {
