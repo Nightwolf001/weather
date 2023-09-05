@@ -18,12 +18,13 @@ const Home: FC = () => {
 
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
-    const coord = useContext(AppLocationContext);
+    const current_location = useContext(AppLocationContext);
     const theme = useSelector((state: RootState) => state.settingsSlice.theme);
     const unit = useSelector((state: RootState) => state.settingsSlice.units);
     const saved_locations = useSelector((state: RootState) => state.locationSlice.saved_locations);
 
     const [loading, setLoading] = useState<boolean>(true);
+    const [coord, setCoord] = useState<any>(saved_locations[0].coord || current_location );
     const [refreshing, setRefreshing] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [modalView, setModalView] = useState<string>('locations');
@@ -64,6 +65,12 @@ const Home: FC = () => {
             }
             setSavedLocationsList(list);
         }
+    }
+
+    const changeLocation = (location: SavedLocationList) => {
+        const index = saved_locations.findIndex((item: SavedLocationList) => item.name === location.name);
+        setCoord(saved_locations[index].coord);
+        setModalVisible(false);
     }
 
     const fetchData = async () => {
@@ -143,7 +150,7 @@ const Home: FC = () => {
                         <View style={[styles.container, { marginTop : 60 }]}>
                         <Text style={[styles.modal_heading_txt, { marginBottom: 20 }]}>Your'e Locations</Text>
                             {saved_locations_list?.map((location, i) => (
-                                <View style={[styles.card, {backgroundColor: cloudy}]}>
+                                <TouchableOpacity style={[styles.card, { backgroundColor: cloudy }]} onPress={() => changeLocation(location)}>
                                     <View style={styles.row_wrapper}>
                                         <View style={styles.grid}>
                                             <Text style={[styles.modal_txt, { fontSize: 20, marginBottom: 5 }]}>{location.name}</Text>
@@ -154,7 +161,7 @@ const Home: FC = () => {
                                             <Text style={[styles.modal_txt, { textAlign: 'right' }]}>H:{location.weather?.temp_max.toFixed(0)}&#176; - L:{location.weather?.temp_min.toFixed(0)}&#176;</Text>
                                         </View>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             ))}
                         </View>
                     </>
