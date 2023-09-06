@@ -28,9 +28,9 @@ const ForecastList = ({ location_details }: ForecastListProps) => {
                                     style={styles.icon}
                                     resizeMode='contain'
                                     source={
-                                        item.forecast?.conditions === 'Sun' ? require(`../assets/icons/clear.png`) :
-                                        item.forecast?.conditions === 'Clouds' ? require(`../assets/icons/partlysunny.png`) :
-                                        item.forecast?.conditions === 'Rain' ? require(`../assets/icons/rain.png`) :
+                                        item.forecast?.conditions.match(/Sun|Clear/) ? require(`../assets/icons/clear.png`) :
+                                        item.forecast?.conditions.match(/Clouds|Fog|Haze/) ? require(`../assets/icons/partlysunny.png`) :
+                                        item.forecast?.conditions.match(/Rain/) ? require(`../assets/icons/rain.png`) :
                                         require(`../assets/icons/rain.png`)
                                     }
                                 />

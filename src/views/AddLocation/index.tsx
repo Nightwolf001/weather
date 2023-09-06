@@ -14,7 +14,6 @@ import { SeaThemeHeader, ForestThemeHeader, TempBar, ForecastList } from "../../
 import { addSavedLocation } from '../../redux/reducers/locations.reducer';
 
 import { styles } from "../../theme/styles";
-import { sunny, cloudy, rainy } from "../../theme/colors"
 
 import { maps_api_key } from '../../../app.json';
 
@@ -24,6 +23,7 @@ const AddLocation: FC<{}> = () => {
     const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
     const theme = useSelector((state: RootState) => state.settingsSlice.theme);
+    const colors = useSelector((state: RootState) => state.settingsSlice.colors);
     const unit = useSelector((state: RootState) => state.settingsSlice.units);
 
     const [coord, setCoord] = useState<Coord>({ lat: '', lng: '' });
@@ -62,6 +62,7 @@ const AddLocation: FC<{}> = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <Text style={[styles.modal_heading_txt, { marginBottom: 20 }]}>Search weather locations</Text>
             <GooglePlacesAutocomplete
                 styles={{ flex: 1, width: '100%' }}
                 placeholder='Search for a city or airport'
@@ -112,7 +113,7 @@ const AddLocation: FC<{}> = () => {
                     {theme && theme === 'sea' && <SeaThemeHeader location_details={location_details} />}
                     {theme && theme === 'forest' && <ForestThemeHeader location_details={location_details} />}
 
-                    <View style={[styles.container, { backgroundColor: location_details.weather?.conditions === 'Sun' ? sunny : location_details.weather?.conditions === 'Clouds' ? cloudy : location_details.weather?.conditions === 'Rain' ? rainy : sunny }]}>
+                    <View style={[styles.container, { backgroundColor: location_details.weather?.conditions.match(/Sun|Clear/) ? colors.sunny : location_details.weather?.conditions.match(/Clouds|Fog|Haze/) ? colors.cloudy : location_details.weather?.conditions.match(/Rain/) ? colors.rainy : colors.sunny }]}>
                         <TempBar location_details={location_details} />
                         <View style={styles.divider}></View>
                         <ForecastList location_details={location_details} />

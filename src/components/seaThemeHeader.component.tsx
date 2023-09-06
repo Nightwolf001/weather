@@ -15,10 +15,10 @@ const seaThemeHeader = ({ location_details }: ThemeHeaderProps) => {
     return (
         <ImageBackground style={styles.image}
             source={
-                weather?.conditions === 'Sun' ? require(`../assets/images/sea/sun.png`) :
-                weather?.conditions === 'Clouds' ? require(`../assets/images/sea/cloud.png`) :
-                weather?.conditions === 'Rain' ? require(`../assets/images/sea/rain.png`) :
-                require(`../assets/images/sea/sun.png`)
+                weather?.conditions.match(/Sun|Clear/) ? require(`../assets/images/sea/sun.png`) :
+                    weather?.conditions.match(/Clouds|Fog|Haze/) ? require(`../assets/images/sea/cloud.png`) :
+                        weather?.conditions.match(/Rain/) ? require(`../assets/images/sea/rain.png`) :
+                            require(`../assets/images/sea/sun.png`)
             }
         >
             <View style={styles.image_container}>

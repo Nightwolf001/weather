@@ -17,6 +17,7 @@ export const getWeatherDetails = async (coord: Coord, units : string ) => {
             description: data.weather[0].description
         }
 
+        console.log('weather', weather);
         return weather;
 
     } catch (ex) {

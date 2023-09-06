@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { AppState, AppStateStatus } from 'react-native';
+import { Alert, AppState, AppStateStatus } from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 
 import { updateSavedLocation } from '../redux/reducers/locations.reducer';
@@ -22,9 +22,12 @@ const AppLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     useEffect(() => {
         (async () => {
-            await getCoords();
+            console.log('AppLocationProvider useEffect', coord)
+            if (coord.lat.length === 0 && coord.lng.length === 0) {
+                await getCoords();
+            }
         })();
-    }, []);
+    }, [coord]);
     
     useEffect(() => {    
         (async () => {
@@ -60,7 +63,14 @@ const AppLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 }));                
             },
             (error) => {
-                console.error(error.code, error.message);
+                Alert.alert(
+                    `Opps!`,
+                    `${error.message}`,
+                    [
+                        { text: "Retry", onPress: () => getCoords() },
+                        { text: "Cancel", onPress: () => console.log("Cancel Pressed") },
+                    ],
+                );
             },
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
         );

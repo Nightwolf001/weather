@@ -34,6 +34,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',  
     },
+    switch_icon_wrapper: {
+        position: 'absolute',
+        bottom: 20,
+        right: 0,
+        left: 0,
+        margin: 'auto',
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',      
+    },
     list_icon_wrapper: {
         position: 'absolute',
         bottom: 20,

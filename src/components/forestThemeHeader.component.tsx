@@ -15,9 +15,9 @@ const ForestThemeHeader = ({ location_details }: ThemeHeaderProps) => {
     return (
         <ImageBackground style={styles.image}
             source={
-                weather?.conditions === 'Sun' ? require(`../assets/images/forest/sun.png`) :
-                weather?.conditions === 'Clouds' ? require(`../assets/images/forest/cloud.png`) :
-                weather?.conditions === 'Rain' ? require(`../assets/images/forest/rain.png`) :
+                weather?.conditions.match(/Sun|Clear/) ? require(`../assets/images/forest/sun.png`) :
+                weather?.conditions.match(/Clouds|Fog|Haze/) ? require(`../assets/images/forest/cloud.png`) :
+                weather?.conditions.match(/Rain/) ? require(`../assets/images/forest/rain.png`) :
                 require(`../assets/images/forest/sun.png`)
             }
         >
