@@ -113,7 +113,7 @@ const AddLocation: FC<{}> = () => {
                     {theme && theme === 'sea' && <SeaThemeHeader location_details={location_details} />}
                     {theme && theme === 'forest' && <ForestThemeHeader location_details={location_details} />}
 
-                    <View style={[styles.container, { backgroundColor: location_details.weather?.conditions.match(/Sun|Clear/) ? colors.sunny : location_details.weather?.conditions.match(/Clouds|Fog|Haze/) ? colors.cloudy : location_details.weather?.conditions.match(/Rain/) ? colors.rainy : colors.sunny }]}>
+                    <View style={[styles.container, { flex: 1.2, backgroundColor: location_details.weather?.conditions.match(/Sun|Clear/) ? colors.sunny : location_details.weather?.conditions.match(/Clouds|Fog|Haze/) ? colors.cloudy : location_details.weather?.conditions.match(/Rain/) ? colors.rainy : colors.sunny }]}>
                         <TempBar location_details={location_details} />
                         <View style={styles.divider}></View>
                         <ForecastList location_details={location_details} />

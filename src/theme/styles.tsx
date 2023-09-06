@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     container: {
-        flex: 1.5,
+        flex: 1.4,
         padding: 16,
     },
     loader: {
