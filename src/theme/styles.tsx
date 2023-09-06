@@ -86,6 +86,7 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     row_wrapper : {
+        display: 'flex',
         flexDirection: 'row',
         width: '100%',
     },
@@ -165,6 +166,7 @@ const styles = StyleSheet.create({
     },
     card:{
         display: 'flex',
+        flex: 1,
         flexDirection: 'row',
         borderRadius: 10,
         marginBottom: 10,
@@ -173,6 +175,13 @@ const styles = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         alignItems: 'center',
+    },
+    absoluteFillObject: { 
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
     }
 });
 

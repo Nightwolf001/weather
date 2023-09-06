@@ -16,13 +16,10 @@ const persistConfig = {
     storage: AsyncStorage,
     whitelist: ["locationSlice", "settingsSlice"],
 };
-console.log('persistConfig: ', persistConfig);
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
+
 export type RootState = ReturnType<typeof persistedReducer>;
-
-console.log('RootState: ', persistedReducer);
-
 export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>

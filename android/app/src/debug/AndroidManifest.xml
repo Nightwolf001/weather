@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
+    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCIOq6AP9irHpnws64AkynY4f3B6cfWmUg"/>
+
+
     <application
         android:usesCleartextTraffic="true"
         tools:targetApi="28"

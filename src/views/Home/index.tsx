@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState, useContext, useCallback } from "react";
-import { View, ActivityIndicator, RefreshControl, Image, ScrollView, TouchableOpacity, Modal, Text } from "react-native";
+import { View, ActivityIndicator, RefreshControl, Image, ScrollView, TouchableOpacity, Modal, Text, FlatList } from "react-native";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../redux/store';
 import { ParamListBase, useNavigation } from '@react-navigation/native';
@@ -7,7 +7,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { getWeatherDetails, getLocationDetails, getWeatherForecast } from '../../actions/weather.actions';
 import { AppLocationContext } from '../../context/appLocationContext';
-import { SavedLocationList, LocationDetials, Weather } from '../../types';
+import { SavedLocationList, LocationDetials } from '../../types';
+import MapView from 'react-native-maps';
 
 import { styles } from "../../theme/styles";
 import { SeaThemeHeader, ForestThemeHeader, TempBar, ForecastList } from "../../components";
@@ -24,9 +25,10 @@ const Home: FC = () => {
     const saved_locations = useSelector((state: RootState) => state.locationSlice.saved_locations);
 
     const [loading, setLoading] = useState<boolean>(true);
-    const [coord, setCoord] = useState<any>(saved_locations[0].coord || current_location );
+    const [coord, setCoord] = useState<any>(current_location);
     const [refreshing, setRefreshing] = useState<boolean>(false);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [editList, setEditList] = useState<boolean>(false);
     const [modalView, setModalView] = useState<string>('locations');
     const [location_details, setLocationDetails] = useState<LocationDetials>({});
     const [saved_locations_list, setSavedLocationsList] = useState<[SavedLocationList]>();
@@ -67,9 +69,17 @@ const Home: FC = () => {
         }
     }
 
+    const handleOnEdit = () => {
+        setEditList(!editList);
+    }
+
     const changeLocation = (location: SavedLocationList) => {
         const index = saved_locations.findIndex((item: SavedLocationList) => item.name === location.name);
         setCoord(saved_locations[index].coord);
+        setModalVisible(false);
+    }
+
+    const removeLocation = (location: SavedLocationList) => {
         setModalVisible(false);
     }
 
@@ -100,7 +110,7 @@ const Home: FC = () => {
             }
         >
             {loading ? 
-            <ActivityIndicator style={styles.loader} size="large" color={sunny} />
+            <ActivityIndicator style={styles.loader} size="large" color={cloudy} />
             : 
             <>
                 <TouchableOpacity style={styles.refresh_icon_wrapper} onPress={() => onRefresh()} >
@@ -143,26 +153,39 @@ const Home: FC = () => {
                         <TouchableOpacity style={styles.modal_btn_left} onPress={() => setModalVisible(false)} >
                             <Text style={styles.modal_txt_alt}>Close</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.modal_btn_right} onPress={() => (setModalVisible(false), navigation.navigate('AddLocation'))} >
-                            <Text style={styles.modal_txt_alt}>Add</Text>
+                    <TouchableOpacity style={styles.modal_btn_right} onPress={() => handleOnEdit()} >
+                            <Text style={styles.modal_txt_alt}>Edit</Text>
                         </TouchableOpacity>
 
                         <View style={[styles.container, { marginTop : 60 }]}>
-                        <Text style={[styles.modal_heading_txt, { marginBottom: 20 }]}>Your'e Locations</Text>
-                            {saved_locations_list?.map((location, i) => (
-                                <TouchableOpacity style={[styles.card, { backgroundColor: cloudy }]} onPress={() => changeLocation(location)}>
+                            <Text style={[styles.modal_heading_txt, { marginBottom: 20 }]}>Your'e Locations</Text>
+                            <FlatList
+                                data={saved_locations_list}
+                                renderItem={({ item: location }: { item: SavedLocationList }) => (
                                     <View style={styles.row_wrapper}>
-                                        <View style={styles.grid}>
-                                            <Text style={[styles.modal_txt, { fontSize: 20, marginBottom: 5 }]}>{location.name}</Text>
-                                            <Text style={[styles.modal_txt]}>{location.weather?.description}</Text>
-                                        </View>
-                                        <View style={styles.grid}>
-                                            <Text style={[styles.modal_txt, { textAlign: 'right', fontSize: 20, marginBottom: 5 }]}>{location.weather?.temp_current.toFixed(0)}&#176;</Text>
-                                            <Text style={[styles.modal_txt, { textAlign: 'right' }]}>H:{location.weather?.temp_max.toFixed(0)}&#176; - L:{location.weather?.temp_min.toFixed(0)}&#176;</Text>
-                                        </View>
+                                        <TouchableOpacity style={[styles.card, { backgroundColor: cloudy, flex: 9 }]} onPress={() => changeLocation(location)}>
+                                            <View style={styles.row_wrapper}>
+                                                <View style={[styles.grid, { flex: 2 }]}>
+                                                    <Text style={[styles.modal_txt, { fontSize: 21, marginBottom: 15 }]}>{location.name}</Text>
+                                                    <Text style={[styles.modal_txt]}>{location.weather?.description}</Text>
+                                                </View>
+                                                <View style={[styles.grid, { flex: 1 }]}>
+                                                    <Text style={[styles.modal_txt, { textAlign: 'right', fontSize: 25, marginBottom: 15 }]}>{location.weather?.temp_current.toFixed(0)}&#176;</Text>
+                                                    <Text style={[styles.modal_txt, { textAlign: 'right' }]}>H:{location.weather?.temp_max.toFixed(0)}&#176; L:{location.weather?.temp_min.toFixed(0)}&#176;</Text>
+                                                </View>
+                                            </View>
+                                        </TouchableOpacity>
+                                        {editList && 
+                                        <TouchableOpacity style={[styles.card, { backgroundColor: cloudy, marginLeft: 10 }]} onPress={() => removeLocation(location)}>
+                                            <View style={[styles.grid, { flex: 1 }]}>
+                                                <Image style={styles.icon} resizeMode='contain' source={require(`../../assets/icons/delete.png`)} />
+                                            </View>
+                                        </TouchableOpacity>
+                                        }
                                     </View>
-                                </TouchableOpacity>
-                            ))}
+                                )}
+                                keyExtractor={location => location.name}
+                            />
                         </View>
                     </>
                     }
@@ -176,6 +199,17 @@ const Home: FC = () => {
                         <View style={styles.container}>
                             <Text>Maps</Text>
                         </View>
+                        {coord.lat && (
+                        <MapView
+                            initialRegion={{
+                                latitude: coord.lat,
+                                longitude: coord.lng,
+                                latitudeDelta: 0.1,
+                                longitudeDelta: 0.1,
+                            }}
+                            style={{ ...styles.absoluteFillObject }}
+                        />
+                    )}
                     </>
                 }
             </Modal>
