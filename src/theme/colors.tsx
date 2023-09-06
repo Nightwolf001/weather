@@ -1,7 +1,3 @@
-export const sunny = '#47AB2F'
-export const cloudy = '#54717A'
-export const rainy = '#57575D'
-
 export const forest_sunny = '#47AB2F'
 export const forest_cloudy = '#54717A'
 export const forest_rainy = '#57575D'
