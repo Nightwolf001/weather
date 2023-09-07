@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { Text, View, ScrollView, Modal, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView, Modal, TouchableOpacity, Platform } from "react-native";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
 
@@ -48,7 +48,6 @@ const AddLocation: FC<{}> = () => {
     };
 
     const addLocation = async () => {
-
         let location: SavedLocation = {
             coord: coord,
             name: location_details?.location?.city || '',
@@ -57,11 +56,12 @@ const AddLocation: FC<{}> = () => {
         dispatch(addSavedLocation(location));
         setModalVisible(false);
         navigation.navigate('Home')
-
     };
 
-    return (
-        <View style={styles.container}>
+    function content() {
+
+        return (
+            <>
             <Text style={[styles.modal_heading_txt, { marginBottom: 20 }]}>Search weather locations</Text>
             <GooglePlacesAutocomplete
                 styles={{ flex: 1, width: '100%' }}
@@ -124,8 +124,26 @@ const AddLocation: FC<{}> = () => {
                 </>
 
             </Modal>
-        </View>
-    );
+            </>
+        );
+        
+    }
+
+    if(Platform.OS === "android") {
+        return (
+            <View style={styles.container}>
+                {content()}
+            </View>
+        );
+    }
+    if (Platform.OS === "ios") {
+        return (
+            <ScrollView contentContainerStyle={styles.container}>
+                {content()}
+            </ScrollView>
+        );
+    }
+
 };
 
 export default AddLocation;
