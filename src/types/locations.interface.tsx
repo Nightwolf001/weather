@@ -42,5 +42,6 @@ export interface SavedLocation {
 
 export interface SavedLocationList {
     name: string;
+    coord?: Coord;
     weather?: Weather;
 }

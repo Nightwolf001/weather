@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useContext, useCallback } from "react";
+import React, { FC, useEffect, useState, useContext, useCallback, useMemo } from "react";
 import { View, ActivityIndicator, RefreshControl, Image, ScrollView, TouchableOpacity, Modal, Text, FlatList, Switch } from "react-native";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
@@ -10,7 +10,7 @@ import { removeSavedLocation } from '../../redux/reducers/locations.reducer';
 import { setSelectedTheme, setSelectedColors } from '../../redux/reducers/settings.reducer';
 import { AppLocationContext } from '../../context/appLocationContext';
 import { SavedLocationList, LocationDetials } from '../../types';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 
 import { styles } from "../../theme/styles";
 import { forest_sunny, forest_cloudy, forest_rainy, sea_sunny, sea_cloudy, sea_rainy } from '../../theme/colors';
@@ -63,6 +63,7 @@ const Home: FC = () => {
 
                 let item: any = {
                     name: location.name,
+                    coord: location.coord,
                     weather: {
                         temp_current: data?.temp_current || 0, // provide default value
                         temp_min: data?.temp_min || 0,
@@ -130,6 +131,27 @@ const Home: FC = () => {
         await fetchData();
         setRefreshing(false);
     }, []);
+
+    const Markers = useMemo(() => saved_locations_list?.map(marker => {
+        if (marker.coord?.lat && marker.coord?.lng) {
+            return (
+                <Marker
+                    key={`${marker.name}`}
+                    tracksViewChanges={false}
+                    pinColor={colors.cloudy}
+                    coordinate={{
+                        latitude: parseFloat(marker.coord.lat),
+                        longitude: parseFloat(marker.coord.lng),
+                    }}
+                    title={marker.name}
+                >
+                    <View>
+                        <Image style={[styles.icon, {tintColor: 'red'}]} resizeMode='contain' source={require(`../../assets/icons/location.png`)} />
+                    </View>
+                </Marker>
+            );
+        }
+    }), [saved_locations_list]);
 
     return (
         <ScrollView 
@@ -243,14 +265,17 @@ const Home: FC = () => {
                         </View>
                         {coord.lat && (
                         <MapView
+                            style={{ ...styles.absoluteFillObject }}
                             initialRegion={{
                                 latitude: coord.lat,
                                 longitude: coord.lng,
                                 latitudeDelta: 0.1,
                                 longitudeDelta: 0.1,
                             }}
-                            style={{ ...styles.absoluteFillObject }}
-                        />
+                        >   
+                           {Markers}
+                        </MapView>   
+                        
                     )}
                     </>
                 }

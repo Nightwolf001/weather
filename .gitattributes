@@ -1,0 +1,5 @@
+*.pbxproj -text
+
+app/config/index.js merge=ours
+
+bitbucket-pipelines.yml merge=ours
