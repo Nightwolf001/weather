@@ -128,7 +128,11 @@ const Home: FC = () => {
 
     const onRefresh = useCallback(async () => {
         setRefreshing(true);
-        await fetchData();
+        if (coord.lat.length !== 0 && coord.lng.length !== 0) {
+            await fetchData();
+        } else {
+            setCoord(current_location);
+        }
         setRefreshing(false);
     }, []);
 

@@ -61,13 +61,16 @@ const AddLocation: FC<{}> = () => {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.container}>
             <Text style={[styles.modal_heading_txt, { marginBottom: 20 }]}>Search weather locations</Text>
             <GooglePlacesAutocomplete
                 styles={{ flex: 1, width: '100%' }}
                 placeholder='Search for a city or airport'
                 fetchDetails={true}
                 onPress={(data, details = null) => {
+
+                    console.log('data', data);
+                    console.log('details', details);
                     
                     let location: Location = {
                         country: details?.address_components[3]?.long_name || '',
@@ -121,7 +124,7 @@ const AddLocation: FC<{}> = () => {
                 </>
 
             </Modal>
-        </ScrollView>
+        </View>
     );
 };
 

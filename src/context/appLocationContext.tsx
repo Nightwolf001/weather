@@ -23,7 +23,7 @@ const AppLocationProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         (async () => {
             console.log('AppLocationProvider useEffect', coord)
-            if (coord.lat.length === 0 && coord.lng.length === 0) {
+            if (coord.lat.length == 0 && coord.lng.length == 0) {
                 await getCoords();
             }
         })();
