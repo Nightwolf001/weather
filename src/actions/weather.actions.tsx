@@ -2,7 +2,7 @@ import axios from 'axios';
 import moment from 'moment';
 
 import { Coord, ForecastList, ForecastItem, Location, Weather } from '../types';
-import { weather_api_base, weather_api_key, maps_api_base, maps_api_key } from '../../app.json';
+import { weather_api_base, weather_api_key, maps_api_base, maps_api_key } from '@env';
 
 export const getWeatherDetails = async (coord: Coord, units : string ) => {
     console.log('getWeatherDetails', coord, units);

@@ -15,7 +15,7 @@ import { addSavedLocation } from '../../redux/reducers/locations.reducer';
 
 import { styles } from "../../theme/styles";
 
-import { maps_api_key } from '../../../app.json';
+import { maps_api_key } from '@env';
 
 const AddLocation: FC<{}> = () => {
 
